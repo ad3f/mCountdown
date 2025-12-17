@@ -205,5 +205,5 @@ Areas Needing Improvement
     Timezone support for shared timers
 
 License: MIT
-Author: [Your Name]
-Live Demo: [Add your GitHub Pages link here]
+Author: Ade
+Live Demo: https://ad3f.github.io/mCountdown/
