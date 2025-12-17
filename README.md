@@ -1,7 +1,7 @@
-Elegant Countdown Timer - README
+#Elegant Countdown Timer - README
 📋 Overview
 
-The Elegant Countdown Timer is a modern, responsive web application that allows users to create beautiful countdowns for any event. Built with pure HTML, CSS, and JavaScript, it features a minimalist design, smooth animations, and full customization capabilities.
+##The Elegant Countdown Timer is a modern, responsive web application that allows users to create beautiful countdowns for any event. Built with pure HTML, CSS, and JavaScript, it features a minimalist design, smooth animations, and full customization capabilities.
 
 https://via.placeholder.com/800x450/3498db/ffffff?text=Elegant+Countdown+Timer
 ✨ Features
