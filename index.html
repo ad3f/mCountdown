@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant Countdown Timer | Track Any Event</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏱️</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      padding: 20px;
+      transition: background 0.5s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-weight: 300;
+      font-size: 2.8rem;
+      color: #2c3e50;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    .timer-icon {
+      font-size: 1.5rem;
+      color: #3498db;
+      margin-right: 10px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .event-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 15px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .event-title {
+      font-size: 2rem;
+      font-weight: 400;
+      color: #2c3e50;
+    }
+
+    .event-description {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      max-width: 600px;
+    }
+
+    #countdown {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: background 0.5s ease;
+    }
+
+    #timer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .time-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+    }
+
+    .time-value {
+      font-size: 4.5rem;
+      font-weight: 200;
+      color: white;
+      line-height: 1;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .time-label {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 8px;
+      font-weight: 400;
+    }
+
+    .colon {
+      color: white;
+      font-size: 3rem;
+      align-self: center;
+      margin: 0 5px;
+      opacity: 0.7;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .event-input-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      font-weight: 500;
+    }
+
+    input[type="datetime-local"], 
+    input[type="text"] {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.3s;
+      width: 100%;
+    }
+
+    input[type="datetime-local"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f8f9fa;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    .btn-secondary:hover {
+      background: #e9ecef;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-example {
+      background: #9b59b6;
+      color: white;
+    }
+
+    .btn-example:hover {
+      background: #8e44ad;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
+    }
+
+    .message {
+      text-align: center;
+      padding: 20px;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: #2c3e50;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      min-height: 60px;
+    }
+
+    .message.show {
+      opacity: 1;
+    }
+
+    .theme-selector {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .theme-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid white;
+      cursor: pointer;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .theme-btn.active {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px #2c3e50;
+    }
+
+    .theme-blue {
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+    }
+
+    .theme-oak-green {
+      background: linear-gradient(135deg, #93c572, #556b2f);
+    }
+
+    .theme-purple {
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    }
+
+    .theme-warm {
+      background: linear-gradient(135deg, #f6d365, #fda085);
+    }
+
+    .theme-dark {
+      background: linear-gradient(135deg, #2c3e50, #4a6491);
+    }
+
+    footer {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      padding: 20px;
+      margin-top: 10px;
+    }
+
+    /* Example presets */
+    .presets {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .preset-btn {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      background: #ecf0f1;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover {
+      background: #d5dbdb;
+      transform: translateY(-1px);
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .card {
+        padding: 25px;
+      }
+      
+      #timer {
+        gap: 15px;
+      }
+      
+      .time-unit {
+        min-width: 80px;
+      }
+      
+      .time-value {
+        font-size: 3.5rem;
+      }
+      
+      .time-label {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+      }
+      
+      .colon {
+        font-size: 2rem;
+      }
+      
+      .event-input-section {
+        flex-direction: column;
+      }
+      
+      .input-group {
+        min-width: auto;
+      }
+    }
+
+    @media (max-width: 576px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .event-title {
+        font-size: 1.5rem;
+      }
+      
+      .event-description {
+        font-size: 1rem;
+      }
+      
+      #timer {
+        gap: 10px;
+      }
+      
+      .time-unit {
+        min-width: 70px;
+      }
+      
+      .time-value {
+        font-size: 2.8rem;
+      }
+      
+      .time-label {
+        font-size: 0.8rem;
+      }
+      
+      .colon {
+        display: none;
+      }
+      
+      .buttons {
+        flex-direction: column;
+      }
+      
+      button {
+        width: 100%;
+      }
+    }
+
+    /* Animation for timer update */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 0.5s ease;
+    }
+
+    /* Completed state */
+    .completed {
+      background: linear-gradient(to right, #2ecc71, #27ae60);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-clock timer-icon"></i> Elegant Countdown Timer</h1>
+      <p class="subtitle">Track time to your important events, deadlines, and special moments</p>
+    </header>
+    
+    <main class="card">
+      <div class="event-info">
+        <h2 class="event-title" id="eventTitle">Countdown to Event</h2>
+        <p class="event-description" id="eventDescription">Set your target date and time to begin the countdown</p>
+      </div>
+      
+      <div id="countdown">
+        <div id="timer">
+          <div class="time-unit">
+            <div class="time-value" id="days">00</div>
+            <div class="time-label">Days</div>
+          </div>
+          <div class="colon">:</div>
+          <div class="time-unit">
+            <div class="time-value" id="hours">00</div>
+            <div class="time-label">Hours</div>
+          </div>
+          <div class="colon">:</div>
+          <div class="time-unit">
+            <div class="time-value" id="minutes">00</div>
+            <div class="time-label">Minutes</div>
+          </div>
+          <div class="colon">:</div>
+          <div class="time-unit">
+            <div class="time-value" id="seconds">00</div>
+            <div class="time-label">Seconds</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="message" id="message"></div>
+      
+      <div class="controls">
+        <div class="event-input-section">
+          <div class="input-group">
+            <label for="targetDate"><i class="far fa-calendar-alt"></i> Target Date & Time</label>
+            <input type="datetime-local" id="targetDate">
+          </div>
+          
+          <div class="input-group">
+            <label for="eventName"><i class="far fa-edit"></i> Event Name</label>
+            <input type="text" id="eventName" placeholder="e.g., Project Deadline, Birthday, Vacation">
+          </div>
+          
+          <div class="input-group">
+            <label for="eventDesc"><i class="far fa-comment-alt"></i> Event Description</label>
+            <input type="text" id="eventDesc" placeholder="Describe your event or add notes">
+          </div>
+        </div>
+        
+        <div class="presets">
+          <p style="width: 100%; text-align: center; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 5px;">Quick Presets:</p>
+          <button class="preset-btn" data-preset="birthday">🎂 Birthday</button>
+          <button class="preset-btn" data-preset="deadline">📅 Project Deadline</button>
+          <button class="preset-btn" data-preset="vacation">✈️ Vacation</button>
+          <button class="preset-btn" data-preset="holiday">🎄 Holiday</button>
+          <button class="preset-btn" data-preset="wedding">💍 Wedding</button>
+        </div>
+        
+        <div class="buttons">
+          <button class="btn-primary" id="setTimerBtn">
+            <i class="fas fa-play-circle"></i> Start Countdown
+          </button>
+          <button class="btn-secondary" id="resetTimerBtn">
+            <i class="fas fa-redo"></i> Reset Timer
+          </button>
+          <button class="btn-example" id="exampleBtn">
+            <i class="fas fa-bolt"></i> New Year's Example
+          </button>
+        </div>
+        
+        <div class="theme-selector">
+          <div class="theme-btn theme-blue active" data-theme="blue" title="Blue Theme"></div>
+          <div class="theme-btn theme-oak-green" data-theme="oak-green" title="Oak Green Theme"></div>
+          <div class="theme-btn theme-purple" data-theme="purple" title="Purple Theme"></div>
+          <div class="theme-btn theme-warm" data-theme="warm" title="Warm Theme"></div>
+          <div class="theme-btn theme-dark" data-theme="dark" title="Dark Theme"></div>
+        </div>
+      </div>
+    </main>
+    
+    <footer>
+      <p>© 2023 Elegant Countdown Timer | Track any event with style</p>
+    </footer>
+  </div>
+
+  <script>
+    // DOM Elements
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const timerContainer = document.getElementById('countdown');
+    const timerEl = document.getElementById('timer');
+    const messageEl = document.getElementById('message');
+    const targetDateInput = document.getElementById('targetDate');
+    const eventNameInput = document.getElementById('eventName');
+    const eventDescInput = document.getElementById('eventDesc');
+    const eventTitleEl = document.getElementById('eventTitle');
+    const eventDescriptionEl = document.getElementById('eventDescription');
+    const setTimerBtn = document.getElementById('setTimerBtn');
+    const resetTimerBtn = document.getElementById('resetTimerBtn');
+    const exampleBtn = document.getElementById('exampleBtn');
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const presetButtons = document.querySelectorAll('.preset-btn');
+
+    // Default target date (7 days from now)
+    let targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 7);
+    targetDate.setHours(18, 0, 0, 0); // Set to 6:00 PM
+    
+    // Set default values
+    targetDateInput.value = formatDateForInput(targetDate);
+    eventNameInput.value = 'Countdown to Event';
+    eventDescInput.value = 'Set your target date and time to begin the countdown';
+    
+    // Initialize timer
+    let countdownInterval;
+    updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
+    
+    // Event listeners
+    setTimerBtn.addEventListener('click', setTimer);
+    resetTimerBtn.addEventListener('click', resetTimer);
+    exampleBtn.addEventListener('click', setExample);
+    
+    // Theme switching
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const theme = this.getAttribute('data-theme');
+        setTheme(theme);
+        
+        // Update active state
+        themeButtons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Preset buttons
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const preset = this.getAttribute('data-preset');
+        setPreset(preset);
+      });
+    });
+    
+    // Functions
+    function formatDateForInput(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+    
+    function setTimer() {
+      // Get the target date from input
+      const newTargetDate = new Date(targetDateInput.value);
+      
+      // Validate the date
+      if (!newTargetDate.getTime()) {
+        showMessage('Please select a valid date and time', 'error');
+        return;
+      }
+      
+      if (newTargetDate <= new Date()) {
+        showMessage('Please select a future date and time', 'error');
+        return;
+      }
+      
+      // Update target date
+      targetDate = newTargetDate;
+      
+      // Update event info
+      const eventName = eventNameInput.value.trim() || 'Countdown to Event';
+      const eventDesc = eventDescInput.value.trim() || 'Track time to your important event';
+      
+      eventTitleEl.textContent = eventName;
+      eventDescriptionEl.textContent = eventDesc;
+      
+      showMessage(`Countdown to "${eventName}" has been set!`, 'success');
+      
+      // Restart the countdown
+      clearInterval(countdownInterval);
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    function resetTimer() {
+      // Reset to default (7 days from now at 6:00 PM)
+      targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + 7);
+      targetDate.setHours(18, 0, 0, 0);
+      
+      // Update the input
+      targetDateInput.value = formatDateForInput(targetDate);
+      
+      // Reset event info
+      eventNameInput.value = 'Countdown to Event';
+      eventDescInput.value = 'Set your target date and time to begin the countdown';
+      eventTitleEl.textContent = 'Countdown to Event';
+      eventDescriptionEl.textContent = 'Set your target date and time to begin the countdown';
+      
+      showMessage('Timer has been reset', 'info');
+      
+      // Restart the countdown
+      clearInterval(countdownInterval);
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    function setExample() {
+      // Set example to next New Year's Eve
+      const now = new Date();
+      let newYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59); // Dec 31, 11:59:59 PM
+      
+      // If we've already passed this year's New Year, set to next year
+      if (now > newYear) {
+        newYear = new Date(now.getFullYear() + 1, 11, 31, 23, 59, 59);
+      }
+      
+      targetDate = newYear;
+      
+      // Update the input
+      targetDateInput.value = formatDateForInput(targetDate);
+      
+      // Set example event info
+      eventNameInput.value = "New Year's Eve Celebration";
+      eventDescInput.value = "Counting down to the new year with friends and family!";
+      eventTitleEl.textContent = "New Year's Eve Celebration";
+      eventDescriptionEl.textContent = "Counting down to the new year with friends and family!";
+      
+      showMessage("New Year's countdown example has been set!", 'success');
+      
+      // Restart the countdown
+      clearInterval(countdownInterval);
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    function setPreset(presetType) {
+      const now = new Date();
+      let presetDate = new Date();
+      let eventName = '';
+      let eventDesc = '';
+      
+      switch(presetType) {
+        case 'birthday':
+          // Set to 30 days from now at 2:00 PM
+          presetDate.setDate(now.getDate() + 30);
+          presetDate.setHours(14, 0, 0, 0);
+          eventName = "Birthday Party";
+          eventDesc = "Celebrating another year around the sun!";
+          break;
+          
+        case 'deadline':
+          // Set to 14 days from now at 5:00 PM
+          presetDate.setDate(now.getDate() + 14);
+          presetDate.setHours(17, 0, 0, 0);
+          eventName = "Project Deadline";
+          eventDesc = "Final submission for the quarterly project";
+          break;
+          
+        case 'vacation':
+          // Set to 60 days from now at 9:00 AM
+          presetDate.setDate(now.getDate() + 60);
+          presetDate.setHours(9, 0, 0, 0);
+          eventName = "Summer Vacation";
+          eventDesc = "Two weeks of relaxation and adventure!";
+          break;
+          
+        case 'holiday':
+          // Set to Christmas this year at 12:00 PM
+          const currentYear = now.getFullYear();
+          presetDate = new Date(currentYear, 11, 25, 12, 0, 0); // Dec 25, 12:00 PM
+          if (now > presetDate) {
+            presetDate = new Date(currentYear + 1, 11, 25, 12, 0, 0);
+          }
+          eventName = "Christmas Day";
+          eventDesc = "Celebrating with family and festive cheer";
+          break;
+          
+        case 'wedding':
+          // Set to 90 days from now at 3:00 PM
+          presetDate.setDate(now.getDate() + 90);
+          presetDate.setHours(15, 0, 0, 0);
+          eventName = "Wedding Day";
+          eventDesc = "The most important day of our lives";
+          break;
+      }
+      
+      // Update values
+      targetDate = presetDate;
+      targetDateInput.value = formatDateForInput(presetDate);
+      eventNameInput.value = eventName;
+      eventDescInput.value = eventDesc;
+      eventTitleEl.textContent = eventName;
+      eventDescriptionEl.textContent = eventDesc;
+      
+      showMessage(`${eventName} preset has been loaded!`, 'success');
+      
+      // Restart the countdown
+      clearInterval(countdownInterval);
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+      
+      // If the countdown is finished
+      if (difference <= 0) {
+        clearInterval(countdownInterval);
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        
+        timerContainer.classList.add('completed');
+        timerEl.innerHTML = `<div style="font-size: 2.5rem; font-weight: 300; padding: 20px;">🎉 ${eventTitleEl.textContent} has started! 🎉</div>`;
+        
+        showMessage(`${eventTitleEl.textContent} is now live!`, 'success');
+        return;
+      }
+      
+      // Calculate time units
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      
+      // Update display with animation
+      updateWithAnimation(daysEl, days);
+      updateWithAnimation(hoursEl, hours);
+      updateWithAnimation(minutesEl, minutes);
+      updateWithAnimation(secondsEl, seconds);
+      
+      // Change background gradient based on time left
+      updateTimerStyle(difference);
+    }
+    
+    function updateWithAnimation(element, value) {
+      const currentValue = parseInt(element.textContent);
+      if (currentValue !== value) {
+        element.textContent = value.toString().padStart(2, '0');
+        element.classList.add('pulse');
+        setTimeout(() => {
+          element.classList.remove('pulse');
+        }, 500);
+      }
+    }
+    
+    function updateTimerStyle(timeLeft) {
+      // Remove completed class if present
+      timerContainer.classList.remove('completed');
+      
+      // Convert time left to days
+      const daysLeft = timeLeft / (1000 * 60 * 60 * 24);
+      
+      // Change style based on urgency
+      if (daysLeft < 1) {
+        // Less than 1 day - red/orange gradient
+        timerContainer.style.background = 'linear-gradient(to right, #e74c3c, #e67e22)';
+      } else if (daysLeft < 3) {
+        // Less than 3 days - orange gradient
+        timerContainer.style.background = 'linear-gradient(to right, #e67e22, #f1c40f)';
+      } else {
+        // More than 3 days - current theme's gradient
+        const activeTheme = document.querySelector('.theme-btn.active').getAttribute('data-theme');
+        setTimerTheme(activeTheme);
+      }
+    }
+    
+    function setTimerTheme(theme) {
+      switch(theme) {
+        case 'blue':
+          timerContainer.style.background = 'linear-gradient(to right, #3498db, #2c3e50)';
+          break;
+        case 'oak-green':
+          timerContainer.style.background = 'linear-gradient(to right, #556b2f, #93c572)';
+          break;
+        case 'purple':
+          timerContainer.style.background = 'linear-gradient(to right, #9b59b6, #8e44ad)';
+          break;
+        case 'warm':
+          timerContainer.style.background = 'linear-gradient(to right, #e67e22, #d35400)';
+          break;
+        case 'dark':
+          timerContainer.style.background = 'linear-gradient(to right, #2c3e50, #34495e)';
+          break;
+      }
+    }
+    
+    function setTheme(theme) {
+      const body = document.body;
+      
+      switch(theme) {
+        case 'blue':
+          body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+          break;
+        case 'oak-green':
+          body.style.background = 'linear-gradient(135deg, #e6f2e6 0%, #b3c9b3 100%)';
+          break;
+        case 'purple':
+          body.style.background = 'linear-gradient(135deg, #f5e6fa 0%, #e2c3e2 100%)';
+          break;
+        case 'warm':
+          body.style.background = 'linear-gradient(135deg, #fdf2e6 0%, #f5d5b3 100%)';
+          break;
+        case 'dark':
+          body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #4a6491 100%)';
+          break;
+      }
+      
+      // Also update timer theme
+      setTimerTheme(theme);
+    }
+    
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = 'message show';
+      
+      // Set color based on type
+      if (type === 'error') {
+        messageEl.style.color = '#e74c3c';
+      } else if (type === 'success') {
+        messageEl.style.color = '#2ecc71';
+      } else {
+        messageEl.style.color = '#2c3e50';
+      }
+      
+      // Hide message after 3 seconds
+      setTimeout(() => {
+        messageEl.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
